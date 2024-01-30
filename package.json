@@ -2,6 +2,20 @@
   "name": "perfect-logger",
   "version": "1.0.0",
   "description": "",
+  "keywords": [
+    "logger",
+    "perfect-logger",
+    "perfect",
+    "log",
+    "logging"
+  ],
+  "bugs": {
+    "url": "https://github.com/KubernetesDashboard/PerfectLogger/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KubernetesDashboard/PerfectLogger"
+  },
   "license": "ISC",
   "author": "MDReal <mdrealiyev00@gmail.com>",
   "type": "module",
@@ -11,7 +25,8 @@
   "scripts": {
     "build": "vite build",
     "coverage": "vitest run --coverage",
-    "test": "vitest"
+    "test": "vitest",
+    "test:sample": "ts-node ./scripts/test-sample.ts"
   },
   "dependencies": {
     "chalk": "^5.3.0"
