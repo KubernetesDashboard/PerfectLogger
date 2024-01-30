@@ -1,11 +1,14 @@
 export class Logger {
   static templates = {
+    NESTJS: `[%appName] %pid - %date(MM/DD/YYYY, hh:mm:ss A) [%name] %message`,
+    SPRING_BOOT: `%date(YYYY-MM-DD hh:mm:ss.ms)  %spaces(%level, 5) %pid --- [%spaces(%name, 15, true)] %spaces(%module, 15)  : %message`,
     DEFAULT: `[%name] [%datetime] %message`
   };
 
   constructor(
-    private readonly _name: string = process.env.NAME || "PerfectLogger",
-    private readonly _template: string = Logger.templates.DEFAULT
+    private readonly _name: string = process.env.NAME || "Logger",
+    private readonly _template: string = Logger.templates.DEFAULT,
+    private readonly _appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
 
   log<TMessage extends any[]>(...messages: TMessage) {
@@ -28,7 +31,35 @@ export class Logger {
     return this._template
       .replace("%name", this._name)
       .replace("%datetime", new Date().toISOString())
-      .replace("%message", message);
+      .replace("%pid", process.pid.toString())
+      .replace("%appName", this._appName)
+      .replace("%message", message)
+      .replace(/%date\((.+?)\)/g, (_, format) => this.formatDate(format))
+      .replace(/%level/g, "<WIP>")
+      .replace(/%module/g, "<WIP>")
+      .replace(/%spaces\((.+?)\)/g, (_, args) => this.space(args));
+  }
+
+  private space(args: string) {
+    const [rawString, rawLength, rawBefore = "false"] = args.split(",");
+    const [string, length, before] = [rawString.trim(), +rawLength.trim(), rawBefore.trim()];
+    const formattedString = before === "true" ? string.slice(0, length) : string.slice(-length);
+    return before === "true"
+      ? formattedString.padStart(length, " ")
+      : formattedString.padEnd(length, " ");
+  }
+
+  private formatDate(format: string) {
+    return format
+      .replace("MM", (new Date().getMonth() + 1).toString().padEnd(2, "0"))
+      .replace("DD", new Date().getDate().toString().padEnd(2, "0"))
+      .replace("YYYY", new Date().getFullYear().toString())
+      .replace("hh", new Date().getHours().toString().padEnd(2, "0"))
+      .replace("h", (new Date().getHours() % 12).toString().padEnd(2, "0"))
+      .replace("mm", new Date().getMinutes().toString().padEnd(2, "0"))
+      .replace("ss", new Date().getSeconds().toString().padEnd(2, "0"))
+      .replace("ms", new Date().getMilliseconds().toString().padEnd(3, "0"))
+      .replace("A", new Date().getHours() < 12 ? "AM" : "PM");
   }
 
   private stringifyMessage = <TMessage>(message: TMessage) => {
