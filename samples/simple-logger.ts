@@ -1,4 +1,4 @@
-import { SimpleLogger } from "../../src/main";
+import { SimpleLogger } from "../src/main";
 
 export const test = () => {
   const logger = new SimpleLogger("Test");

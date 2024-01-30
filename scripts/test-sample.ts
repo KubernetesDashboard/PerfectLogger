@@ -7,7 +7,7 @@ if (process.argv.length < 3) {
 }
 
 const name = process.argv[2];
-const sample = resolve(__dirname, "../samples", name, "main.ts");
+const sample = resolve(__dirname, "../samples", `${name}.ts`);
 if (!existsSync(sample)) {
   console.error(`Sample ${name} not found`);
   process.exit(1);
