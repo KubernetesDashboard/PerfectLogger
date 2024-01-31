@@ -1,3 +1,5 @@
+import { LogLevel } from "../types/log-level";
+
 export class Logger {
   static templates = {
     NESTJS: `[%appName] %pid - %date(MM/DD/YYYY, hh:mm:ss A) [%name] %message`,
@@ -11,23 +13,39 @@ export class Logger {
     private readonly _appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
 
+  debug<TMessage extends any[]>(...messages: TMessage) {
+    this.print(this.message(messages, LogLevel.DEBUG));
+  }
+
+  info<TMessage extends any[]>(...messages: TMessage) {
+    this.print(this.message(messages, LogLevel.INFO));
+  }
+
   log<TMessage extends any[]>(...messages: TMessage) {
-    this.print(this.message(messages));
+    this.print(this.message(messages, LogLevel.LOG));
+  }
+
+  warn<TMessage extends any[]>(...messages: TMessage) {
+    this.print(this.message(messages, LogLevel.WARN));
+  }
+
+  error<TMessage extends any[]>(...messages: TMessage) {
+    this.print(this.message(messages, LogLevel.ERROR));
   }
 
   private print(message: string) {
     console.log(message);
   }
 
-  private message<TMessage extends any[]>(messages: TMessage) {
+  private message<TMessage extends any[]>(messages: TMessage, level: LogLevel) {
     const messageItems = messages.flatMap(message => this.stringifyMessage(message)).join(" ");
     return messageItems
       .split("\n")
-      .map(message => this.formatMessage(message))
+      .map(message => this.formatMessage(message, level))
       .join("\n");
   }
 
-  private formatMessage(message: string) {
+  private formatMessage(message: string, level: LogLevel) {
     return this._template
       .replace("%name", this._name)
       .replace("%datetime", new Date().toISOString())
@@ -35,7 +53,7 @@ export class Logger {
       .replace("%appName", this._appName)
       .replace("%message", message)
       .replace(/%date\((.+?)\)/g, (_, format) => this.formatDate(format))
-      .replace(/%level/g, "<WIP>")
+      .replace(/%level/g, level)
       .replace(/%module/g, "<WIP>")
       .replace(/%spaces\((.+?)\)/g, (_, args) => this.space(args));
   }
