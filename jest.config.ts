@@ -1,9 +1,9 @@
 import type { Config } from "jest";
 
 export default {
+  preset: "ts-jest",
   testEnvironment: "node",
-  automock: true,
-  testMatch: ["**/*.test.ts"],
+  testMatch: ["**/*.test.ts", "**/*.spec.ts"],
   moduleFileExtensions: ["ts", "js"],
 
   collectCoverage: true,
