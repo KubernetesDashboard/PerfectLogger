@@ -1,4 +1,5 @@
 import { LogLevel } from "../types/log-level";
+import { Plugin } from "../types/plugin";
 
 /**
  * Logger class
@@ -8,7 +9,7 @@ import { LogLevel } from "../types/log-level";
  * import { Logger } from "./utils/logger";
  *
  * const logger = new Logger("MyLogger");
- * logger.log("<Enything you want to log>");
+ * logger.log("<Anything you want to log>");
  */
 export class Logger {
   /**
@@ -22,6 +23,9 @@ export class Logger {
     DEFAULT: `[%name] [%datetime] %message`
   };
 
+  private static plugins: Plugin[] = [];
+  private plugins: Plugin[] = [];
+
   /**
    * Logger constructor
    * @constructor
@@ -34,6 +38,10 @@ export class Logger {
     private readonly template: string = Logger.templates.DEFAULT,
     private readonly appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
+
+  $extends(plugin: Plugin, global = false) {
+    (global ? Logger.plugins : this.plugins).push(plugin);
+  }
 
   /**
    * Debug level
