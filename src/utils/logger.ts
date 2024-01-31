@@ -3,7 +3,7 @@ import { LogLevel } from "../types/log-level";
 export class Logger {
   static templates = {
     NESTJS: `[%appName] %pid - %date(MM/DD/YYYY, hh:mm:ss A) [%name] %message`,
-    SPRING_BOOT: `%date(YYYY-MM-DD hh:mm:ss.ms)  %spaces(%level, 5) %pid --- [%spaces(%name, 15, true)] %spaces(%module, 15)  : %message`,
+    SPRING_BOOT: `%date(YYYY-MM-DD hh:mm:ss.ms) %spaces(%level, 5, true) %pid --- [%spaces(%name, 15, true)] %spaces(%module, 15)  : %message`,
     DEFAULT: `[%name] [%datetime] %message`
   };
 
