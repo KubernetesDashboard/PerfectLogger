@@ -1,34 +1,76 @@
 import { LogLevel } from "../types/log-level";
 
+/**
+ * Logger class
+ * @class
+ * @public
+ * @example
+ * import { Logger } from "./utils/logger";
+ *
+ * const logger = new Logger("MyLogger");
+ * logger.log("<Enything you want to log>");
+ */
 export class Logger {
+  /**
+   * Templates for different frameworks
+   * @static
+   * @public
+   */
   static templates = {
     NESTJS: `[%appName] %pid - %date(MM/DD/YYYY, hh:mm:ss A) [%name] %message`,
     SPRING_BOOT: `%date(YYYY-MM-DD hh:mm:ss.ms) %spaces(%level, 5, true) %pid --- [%spaces(%name, 15, true)] %spaces(%module, 15)  : %message`,
     DEFAULT: `[%name] [%datetime] %message`
   };
 
+  /**
+   * Logger constructor
+   * @constructor
+   * @param {string} name
+   * @param {string} template
+   * @param {string} appName
+   */
   constructor(
-    private readonly _name: string = process.env.NAME || "Logger",
-    private readonly _template: string = Logger.templates.DEFAULT,
-    private readonly _appName: string = process.env.APP_NAME || "PerfectLogger"
+    private readonly name: string = process.env.NAME || "Logger",
+    private readonly template: string = Logger.templates.DEFAULT,
+    private readonly appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
 
+  /**
+   * Debug level
+   * @param {any[]} messages
+   */
   debug<TMessage extends any[]>(...messages: TMessage) {
     this.print(this.message(messages, LogLevel.DEBUG));
   }
 
+  /**
+   * Debug level
+   * @param {any[]} messages
+   */
   info<TMessage extends any[]>(...messages: TMessage) {
     this.print(this.message(messages, LogLevel.INFO));
   }
 
+  /**
+   * Debug level
+   * @param {any[]} messages
+   */
   log<TMessage extends any[]>(...messages: TMessage) {
     this.print(this.message(messages, LogLevel.LOG));
   }
 
+  /**
+   * Debug level
+   * @param {any[]} messages
+   */
   warn<TMessage extends any[]>(...messages: TMessage) {
     this.print(this.message(messages, LogLevel.WARN));
   }
 
+  /**
+   * Debug level
+   * @param {any[]} messages
+   */
   error<TMessage extends any[]>(...messages: TMessage) {
     this.print(this.message(messages, LogLevel.ERROR));
   }
@@ -46,11 +88,11 @@ export class Logger {
   }
 
   private formatMessage(message: string, level: LogLevel) {
-    return this._template
-      .replace("%name", this._name)
+    return this.template
+      .replace("%name", this.name)
       .replace("%datetime", new Date().toISOString())
       .replace("%pid", process.pid.toString())
-      .replace("%appName", this._appName)
+      .replace("%appName", this.appName)
       .replace("%message", message)
       .replace(/%date\((.+?)\)/g, (_, format) => this.formatDate(format))
       .replace(/%level/g, level)
