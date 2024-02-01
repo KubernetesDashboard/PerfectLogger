@@ -7,7 +7,7 @@ export const test = () => {
 
   logger.debug("Debug message");
   logger.info("Info message");
-  logger.log("Info message");
+  logger.log("Log message");
   logger.warn("Warn message");
   logger.error("Error message");
 };
