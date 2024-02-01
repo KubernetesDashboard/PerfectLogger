@@ -1,5 +1,6 @@
 import { LogLevel } from "../types/log-level";
-import { Plugin } from "../types/plugin";
+import { OnlyFn } from "../types/only-fn";
+import { Plugin, PluginContext } from "../types/plugin";
 
 /**
  * Logger class
@@ -39,8 +40,11 @@ export class Logger {
     private readonly appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
 
-  $extends(plugin: Plugin, global = false) {
-    (global ? Logger.plugins : this.plugins).push(plugin);
+  $extends(plugin: PluginContext, global = false) {
+    const plugins = global ? Logger.plugins : this.plugins;
+    const userExtendPlugins = Array.isArray(plugin) ? plugin : [plugin];
+    plugins.push(...userExtendPlugins);
+    return this;
   }
 
   /**
@@ -96,7 +100,7 @@ export class Logger {
   }
 
   private formatMessage(message: string, level: LogLevel) {
-    return this.template
+    const formattedMessage = this.template
       .replace("%name", this.name)
       .replace("%datetime", new Date().toISOString())
       .replace("%pid", process.pid.toString())
@@ -106,6 +110,11 @@ export class Logger {
       .replace(/%level/g, level)
       .replace(/%module/g, "<WIP>")
       .replace(/%spaces\((.+?)\)/g, (_, args) => this.space(args));
+
+    return this.plugins.reduce(
+      (message, plugin) => plugin.message?.(message, level) || message,
+      formattedMessage
+    );
   }
 
   private space(args: string) {
