@@ -1,11 +1,16 @@
 {
-  "name": "perfect-logger",
+  "name": "node-template",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
   "author": "MDReal <mdrealiyev00@gmail.com>",
+  "type": "module",
+  "main": "build/node-template.cjs.js",
+  "module": "build/node-template.es.js",
+  "types": "build/main.d.ts",
   "scripts": {
-    "build": "tsc --project tsconfig.json"
+    "build": "vite build",
+    "test": "jest"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
@@ -13,7 +18,9 @@
     "prettier": "^3.2.4",
     "prettier-plugin-packagejson": "^2.4.9",
     "prettier-plugin-tsconfig": "^0.0.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12",
+    "vite-plugin-dts": "^3.7.2"
   },
   "packageManager": "yarn@4.0.2"
 }
