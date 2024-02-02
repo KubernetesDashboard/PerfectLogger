@@ -1,9 +1,13 @@
 import chalk from "chalk";
 
 import { LogLevel } from "../types/log-level";
-import { PluginContext } from "../types/plugin";
+import { Plugin } from "../types/plugin";
 
-export const colorize = () => {
+/**
+ * Colorize the logs
+ * @returns {Plugin} - The plugin object
+ */
+export const colorize = (): Plugin => {
   return {
     name: "perfect-logger:colorize",
 
@@ -24,5 +28,5 @@ export const colorize = () => {
 
       return message;
     }
-  } satisfies PluginContext;
+  };
 };

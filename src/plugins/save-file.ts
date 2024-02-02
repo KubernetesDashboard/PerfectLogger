@@ -4,7 +4,12 @@ import { resolve } from "node:path";
 import { LogLevel } from "../types/log-level";
 import { Plugin } from "../types/plugin";
 
-export const saveFile = (dir = resolve("logs")): Plugin => {
+/**
+ * Save logs to a file
+ * @param {string} dir - The directory to save the logs
+ * @returns {Plugin} - The plugin object
+ */
+export const saveFile = (dir: string = resolve("logs")): Plugin => {
   !existsSync(dir) && mkdirSync(dir);
   const streams = new Map<LogLevel | "logs", NodeJS.WritableStream>();
   const levels = Object.values(LogLevel);

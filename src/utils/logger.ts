@@ -87,6 +87,9 @@ export class Logger {
     this.print(this.message(messages, LogLevel.ERROR));
   }
 
+  /**
+   * Close all possible connections in the plugins
+   */
   close() {
     return Promise.all([
       ...this.plugins.map(plugin => plugin.close?.()),
