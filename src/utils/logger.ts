@@ -27,16 +27,39 @@ export class Logger {
   private static plugins: Plugin[] = [];
   private plugins: Plugin[] = [];
 
-  /**
-   * Logger constructor
-   * @constructor
-   * @param {string} name
-   * @param {string} template
-   * @param {string} appName
-   */
   constructor(
+    /**
+     * Name of the logger used in
+     */
     private readonly name: string = process.env.NAME || "Logger",
+    /**
+     * Template for the logger
+     * Variables used in the template:
+     *  - %name: Logger name
+     *  - %datetime: Current date and time in ISO format
+     *  - %date(format: string): Current date in the given format:
+     *    - MM: Month
+     *    - DD: Day
+     *    - YYYY: Year
+     *    - hh: Hours
+     *    - mm: Minutes
+     *    - ss: Seconds
+     *    - ms: Milliseconds
+     *    - A: AM/PM
+     *  - %pid: Process ID
+     *  - %appName: Application name
+     *  - %message: The message to log
+     *  - %level: The log level
+     *  - %module: The module name
+     *  - %spaces(content: string, length: number, before: boolean): Fit content to the given length with spaces
+     *    - content: The string to fit
+     *    - length: The length to fit the string
+     *    - before: If true, the spaces will be added before the string, otherwise after
+     */
     private readonly template: string = Logger.templates.DEFAULT,
+    /**
+     * Application name to use in the logs
+     */
     private readonly appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
 
