@@ -87,6 +87,13 @@ export class Logger {
     this.print(this.message(messages, LogLevel.ERROR));
   }
 
+  close() {
+    return Promise.all([
+      ...this.plugins.map(plugin => plugin.close?.()),
+      ...Logger.plugins.map(plugin => plugin.close?.())
+    ]);
+  }
+
   private print(message: string) {
     console.log(message);
   }
