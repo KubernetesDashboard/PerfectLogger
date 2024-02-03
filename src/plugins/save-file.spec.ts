@@ -10,7 +10,7 @@ import { saveFile } from "./save-file";
 
 describe("saveToFile", () => {
   const message = "Test message";
-  const logsDir = resolve("logs");
+  const logsDir = resolve("dummy-logs-dir");
   let plugin: Plugin;
 
   afterAll(() => {
