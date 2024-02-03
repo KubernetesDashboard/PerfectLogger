@@ -7,7 +7,7 @@ export default defineConfig({
     outDir: "build",
     emptyOutDir: true,
     lib: {
-      name: "perfect-logger",
+      name: "node-template",
       entry: "src/main.ts",
       formats: ["es", "cjs"],
       fileName: format => `node-template.${format}.js`
