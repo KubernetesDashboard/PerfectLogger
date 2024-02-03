@@ -7,10 +7,10 @@ export default defineConfig({
     outDir: "build",
     emptyOutDir: true,
     lib: {
-      name: "node-template",
+      name: "perfect-logger",
       entry: "src/main.ts",
       formats: ["es", "cjs"],
-      fileName: format => `node-template.${format}.js`
+      fileName: format => `perfect-logger.${format}.js`
     }
   },
   plugins: [dtsPlugin({ staticImport: true, insertTypesEntry: true })],

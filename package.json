@@ -1,12 +1,12 @@
 {
-  "name": "node-template",
+  "name": "perfect-logger",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
   "author": "MDReal <mdrealiyev00@gmail.com>",
   "type": "module",
-  "main": "build/node-template.cjs.js",
-  "module": "build/node-template.es.js",
+  "main": "build/perfect-logger.cjs.js",
+  "module": "build/perfect-logger.es.js",
   "types": "build/main.d.ts",
   "scripts": {
     "build": "vite build",
