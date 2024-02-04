@@ -1,6 +1,7 @@
 import { LogLevel } from "../types/log-level";
 import { OnlyFn } from "../types/only-fn";
 import { Plugin, PluginContext } from "../types/plugin";
+import { ValueOf } from "../types/value-of";
 
 /**
  * Logger class
@@ -25,13 +26,13 @@ export class Logger {
   };
 
   private static plugins: Plugin[] = [];
-  private plugins: Plugin[] = [];
+  protected plugins: Plugin[] = [];
 
   constructor(
     /**
      * Name of the logger used in
      */
-    private readonly name: string = process.env.NAME || "Logger",
+    protected readonly name: string = process.env.NAME || "Logger",
     /**
      * Template for the logger
      * Variables used in the template:
@@ -56,11 +57,11 @@ export class Logger {
      *    - length: The length to fit the string
      *    - before: If true, the spaces will be added before the string, otherwise after
      */
-    private readonly template: string = Logger.templates.DEFAULT,
+    protected readonly template: string = Logger.templates.DEFAULT,
     /**
      * Application name to use in the logs
      */
-    private readonly appName: string = process.env.APP_NAME || "PerfectLogger"
+    protected readonly appName: string = process.env.APP_NAME || "PerfectLogger"
   ) {}
 
   $extends(plugin: PluginContext, global = false) {
@@ -75,7 +76,7 @@ export class Logger {
    * @param {any[]} messages
    */
   debug<TMessage extends any[]>(...messages: TMessage) {
-    this.print(this.message(messages, LogLevel.DEBUG));
+    this.print(this.message(messages, LogLevel.DEBUG), LogLevel.DEBUG);
   }
 
   /**
@@ -83,7 +84,7 @@ export class Logger {
    * @param {any[]} messages
    */
   info<TMessage extends any[]>(...messages: TMessage) {
-    this.print(this.message(messages, LogLevel.INFO));
+    this.print(this.message(messages, LogLevel.INFO), LogLevel.INFO);
   }
 
   /**
@@ -91,7 +92,7 @@ export class Logger {
    * @param {any[]} messages
    */
   log<TMessage extends any[]>(...messages: TMessage) {
-    this.print(this.message(messages, LogLevel.LOG));
+    this.print(this.message(messages, LogLevel.LOG), LogLevel.LOG);
   }
 
   /**
@@ -99,7 +100,7 @@ export class Logger {
    * @param {any[]} messages
    */
   warn<TMessage extends any[]>(...messages: TMessage) {
-    this.print(this.message(messages, LogLevel.WARN));
+    this.print(this.message(messages, LogLevel.WARN), LogLevel.WARN);
   }
 
   /**
@@ -107,7 +108,7 @@ export class Logger {
    * @param {any[]} messages
    */
   error<TMessage extends any[]>(...messages: TMessage) {
-    this.print(this.message(messages, LogLevel.ERROR));
+    this.print(this.message(messages, LogLevel.ERROR), LogLevel.ERROR);
   }
 
   /**
@@ -120,11 +121,16 @@ export class Logger {
     ]);
   }
 
-  private print(message: string) {
-    console.log(message);
+  protected print(message: string, logLevel: ValueOf<typeof LogLevel>, formatMessages = true) {
+    const formattedMessage = this.plugins.reduce(
+      (message, plugin) => plugin.message?.(message, logLevel) || message,
+      message
+    );
+
+    console.log(formatMessages ? formattedMessage : message);
   }
 
-  private message<TMessage extends any[]>(messages: TMessage, level: LogLevel) {
+  protected message<TMessage extends any[]>(messages: TMessage, level: ValueOf<typeof LogLevel>) {
     const messageItems = messages.flatMap(message => this.stringifyMessage(message)).join(" ");
     return messageItems
       .split("\n")
@@ -132,8 +138,8 @@ export class Logger {
       .join("\n");
   }
 
-  private formatMessage(message: string, level: LogLevel) {
-    const formattedMessage = this.template
+  protected formatMessage(message: string, level: ValueOf<typeof LogLevel>) {
+    return this.template
       .replace("%name", this.name)
       .replace("%datetime", new Date().toISOString())
       .replace("%pid", process.pid.toString())
@@ -143,23 +149,27 @@ export class Logger {
       .replace(/%level/g, level)
       .replace(/%module/g, "<WIP>")
       .replace(/%spaces\((.+?)\)/g, (_, args) => this.space(args));
-
-    return this.plugins.reduce(
-      (message, plugin) => plugin.message?.(message, level) || message,
-      formattedMessage
-    );
   }
 
-  private space(args: string) {
+  protected space(args: string) {
     const [rawString, rawLength, rawBefore = "false"] = args.split(",");
     const [string, length, before] = [rawString.trim(), +rawLength.trim(), rawBefore.trim()];
-    const formattedString = before === "true" ? string.slice(0, length) : string.slice(-length);
-    return before === "true"
-      ? formattedString.padStart(length, " ")
-      : formattedString.padEnd(length, " ");
+    return this.fitDataToLength(string, length, before === "true");
   }
 
-  private formatDate(format: string) {
+  protected fitDataToLength(data: string, maxLength: number, before = false) {
+    const dataSlices = data.split("\n");
+    return dataSlices.map(slice => this.fitSliceToLength(slice, maxLength, before)).join("\n");
+  }
+
+  protected fitSliceToLength(slice: string, maxLength: number, before = false) {
+    if (slice.length >= maxLength) {
+      return before ? slice.slice(-maxLength) : slice.slice(0, maxLength);
+    }
+    return before ? slice.padStart(maxLength, " ") : slice.padEnd(maxLength, " ");
+  }
+
+  protected formatDate(format: string) {
     return format
       .replace("MM", (new Date().getMonth() + 1).toString().padEnd(2, "0"))
       .replace("DD", new Date().getDate().toString().padEnd(2, "0"))
@@ -172,7 +182,7 @@ export class Logger {
       .replace("A", new Date().getHours() < 12 ? "AM" : "PM");
   }
 
-  private stringifyMessage = <TMessage>(message: TMessage) => {
+  protected stringifyMessage = <TMessage>(message: TMessage) => {
     switch (true) {
       case message === null:
         return "null";

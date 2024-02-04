@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { LogLevel } from "../types/log-level";
 import { Logger } from "./logger";
 
 describe("Logger Class", () => {
@@ -12,7 +13,7 @@ describe("Logger Class", () => {
   it("should print DEBUG level message", () => {
     const consoleSpy = vi.spyOn(console, "log");
     logger.debug("Debug message");
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("DEBUG"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(LogLevel.DEBUG));
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Debug message"));
     consoleSpy.mockRestore();
   });
@@ -20,7 +21,7 @@ describe("Logger Class", () => {
   it("should print INFO level message", () => {
     const consoleSpy = vi.spyOn(console, "log");
     logger.info("Info message");
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("INFO"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(LogLevel.INFO));
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Info message"));
     consoleSpy.mockRestore();
   });
@@ -28,7 +29,7 @@ describe("Logger Class", () => {
   it("should print LOG level message", () => {
     const consoleSpy = vi.spyOn(console, "log");
     logger.log("Log message");
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("LOG"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(LogLevel.LOG));
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Log message"));
     consoleSpy.mockRestore();
   });
@@ -36,7 +37,7 @@ describe("Logger Class", () => {
   it("should print WARN level message", () => {
     const consoleSpy = vi.spyOn(console, "log");
     logger.warn("Warn message");
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("WARN"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(LogLevel.WARN));
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Warn message"));
     consoleSpy.mockRestore();
   });
@@ -44,7 +45,7 @@ describe("Logger Class", () => {
   it("should print ERROR level message", () => {
     const consoleSpy = vi.spyOn(console, "log");
     logger.error("Error message");
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("ERROR"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(LogLevel.ERROR));
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Error message"));
     consoleSpy.mockRestore();
   });

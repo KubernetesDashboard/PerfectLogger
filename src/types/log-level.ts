@@ -1,29 +1,30 @@
 /**
  * Log levels enum
+ * @enum
  */
-export enum LogLevel {
+export const LogLevel = {
   /**
    * Debug level
    */
-  DEBUG = "DEBUG",
+  DEBUG: "debug",
 
   /**
    * Log level
    */
-  LOG = "LOG",
+  LOG: "log",
 
   /**
    * Info level
    */
-  INFO = "INFO",
+  INFO: "info",
 
   /**
    * Warn level
    */
-  WARN = "WARN",
+  WARN: "warn",
 
   /**
    * Error level
    */
-  ERROR = "ERROR"
-}
+  ERROR: "error"
+} as const;
