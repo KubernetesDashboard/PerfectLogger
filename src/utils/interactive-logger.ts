@@ -35,9 +35,9 @@ export class InteractiveLogger extends Logger {
     return this;
   }
 
-  interactivePrint(messages: (InteractiveMessage | string)[]) {
-    const printableMessages = messages.map(message =>
-      typeof message === "string" ? { message, logLevel: LogLevel.LOG } : message
+  interactivePrint(messages: string | (InteractiveMessage | string)[]) {
+    const printableMessages = (typeof messages === "string" ? messages.split("\n") : messages).map(
+      message => (typeof message === "string" ? { message, logLevel: LogLevel.LOG } : message)
     );
 
     const handledMessages = printableMessages
