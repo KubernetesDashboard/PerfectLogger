@@ -2,6 +2,8 @@
 import { defineConfig } from "vite";
 import dtsPlugin from "vite-plugin-dts";
 
+const external = [/^node:/];
+
 export default defineConfig({
   build: {
     outDir: "build",
@@ -11,7 +13,8 @@ export default defineConfig({
       entry: "src/main.ts",
       formats: ["es", "cjs"],
       fileName: format => `perfect-logger.${format}.js`
-    }
+    },
+    rollupOptions: { external }
   },
   plugins: [dtsPlugin({ staticImport: true, insertTypesEntry: true })],
   test: {}
