@@ -11,7 +11,7 @@ import { Plugin } from "../types/plugin";
  */
 export const saveFile = (dir: string = resolve("logs")): Plugin => {
   !existsSync(dir) && mkdirSync(dir);
-  const streams = new Map<LogLevel | "logs", NodeJS.WritableStream>();
+  const streams = new Map<Lowercase<keyof typeof LogLevel> | "logs", NodeJS.WritableStream>();
   const levels = Object.values(LogLevel);
   ([...levels, "logs"] as const).forEach(level => {
     const file = resolve(dir, `${level.toLowerCase()}.log`);
@@ -22,8 +22,8 @@ export const saveFile = (dir: string = resolve("logs")): Plugin => {
   return {
     name: "perfect-logger:save-to-file",
 
-    message(message: string, level: LogLevel) {
-      const stream = streams.get(level);
+    message(message: string, level: Lowercase<keyof typeof LogLevel> | keyof typeof LogLevel) {
+      const stream = streams.get(level.toLowerCase() as Lowercase<keyof typeof LogLevel>);
       stream?.write(`${message}\n`);
       streams.get("logs")?.write(`${message}\n`);
     },
