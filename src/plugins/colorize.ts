@@ -2,6 +2,7 @@ import chalk from "chalk";
 
 import { LogLevel } from "../types/log-level";
 import { Plugin } from "../types/plugin";
+import { ValueOf } from "../types/value-of";
 
 /**
  * Colorize the logs
@@ -11,7 +12,7 @@ export const colorize = (): Plugin => {
   return {
     name: "perfect-logger:colorize",
 
-    message(message: string, level: LogLevel): string {
+    message(message: string, level: ValueOf<typeof LogLevel>): string {
       switch (level) {
         case LogLevel.DEBUG:
           return chalk.blue(message);

@@ -23,16 +23,16 @@
   "module": "build/perfect-logger.es.js",
   "types": "build/main.d.ts",
   "scripts": {
-    "build": "vite build",
-    "coverage": "vitest run --coverage",
-    "test": "vitest",
-    "test:sample": "vite-node scripts/test-sample.ts"
+    "build": "bun scripts/build.ts",
+    "test:sample": "bun scripts/test-sample.ts"
   },
   "dependencies": {
     "chalk": "^5.3.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "bun-plugin-dts": "^0.2.1",
+    "bun-types": "^1.1.1",
     "prettier": "^3.2.4",
     "prettier-plugin-packagejson": "^2.4.9",
     "prettier-plugin-tsconfig": "^0.0.1",
